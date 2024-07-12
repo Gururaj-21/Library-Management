@@ -35,8 +35,8 @@ def admin_only(view_func):
 
 @csrf_exempt
 @api_view(['POST'])
-# @admin_only
-# @login_required
+@admin_only
+@login_required
 def register_borrower(request):
     try:
         # logger.info("Registering the user")
