@@ -60,3 +60,8 @@ To easily test the API endpoints, you can use Postman collections. Follow these 
     - Each folder contains requests for CRUD operations for borrowers, books, and borrowing history.
     - Click on any request to open it.
     - Click `Send` to execute the request.
+
+## Admin credentials:
+Uses this credential to login as Ads=min
+- mail_id:gururaj431@gmail.com
+- password:bUlqUe2FtG
