@@ -1,0 +1,377 @@
+{
+	"info": {
+		"_postman_id": "0a8ad26c-705b-493a-941c-06f78cbb3b9b",
+		"name": "Library Management Api's",
+		"description": "This Postman collection provides a set of APIs to manage a library system, including operations for books, users, borrowing transactions, and authentication. The collection is organized into folders based on functionality to simplify navigation and usage.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28533055"
+	},
+	"item": [
+		{
+			"name": "Book Management",
+			"item": [
+				{
+					"name": "Insert_the_book",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"title\": \"Data Structure and Algorithmic\",\r\n\"author\": \"john\",\r\n\"isbn\": \"546513216\",\r\n\"published_date\": \"2016-05-10\"}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/book_management/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"book_management",
+								""
+							]
+						},
+						"description": "This API endpoint allows you to create a new book entry in your Django application's database."
+					},
+					"response": []
+				},
+				{
+					"name": "Get_book_details",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/book_management/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"book_management",
+								""
+							]
+						},
+						"description": "This API endpoint allows you to get all book details from your Django application's database."
+					},
+					"response": []
+				},
+				{
+					"name": "update_book",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"id\": 3,\r\n            \"title\": \"Python Programming: Using Problem Solving Approach\",\r\n            \"author\": \"Reema\",\r\n            \"isbn\": \"7654254685425\",\r\n            \"published_date\": \"2018-07-11\",\r\n            \"status\": \"available\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/book_management/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"book_management",
+								""
+							]
+						},
+						"description": "This API endpoint allows you to update the book entry in your Django application's database."
+					},
+					"response": []
+				},
+				{
+					"name": "delete_book",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": 2}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/book_management\\",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"book_management",
+								""
+							]
+						},
+						"description": "This API endpoint allows you to delete the book entry in your Django application's database."
+					},
+					"response": []
+				}
+			],
+			"description": "In this folder, api for Crud operation of Book Management will be present"
+		},
+		{
+			"name": "Borrowing Management",
+			"item": [
+				{
+					"name": "insert_details",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"book\":\"Data Structure and Algorithmic\", \"borrower\": 2, \"borrowed_date\": \"2024-07-10\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/borrowing_history/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"borrowing_history",
+								""
+							]
+						},
+						"description": "This API endpoint allows you to create a borrowing history of user and the book in your Django application's database."
+					},
+					"response": []
+				},
+				{
+					"name": "borrowing_history",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"borrower_id\": 2}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/borrowing_history/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"borrowing_history",
+								""
+							]
+						},
+						"description": "This API endpoint allows you to get the borrowing history of user in your Django application's database."
+					},
+					"response": []
+				},
+				{
+					"name": "Update the borrower Management",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"borrower_id\":2,\r\n  \"book_name\": \"Data Structure and Algorithmic\",\r\n  \"returned_date\": \"2023-07-20T10:00:00Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/borrowing_history/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"borrowing_history",
+								""
+							]
+						},
+						"description": "This API endpoint allows you to update the borrowing history of user in your Django application's database."
+					},
+					"response": []
+				}
+			],
+			"description": "In this folder, there will be Api's to handle the Borrowing Record."
+		},
+		{
+			"name": "Authendication",
+			"item": [
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/logout/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"logout",
+								""
+							]
+						},
+						"description": "This Api used for logout."
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"mail_id\":\"gururajkt21@gmail.com\",\"password\":\"aE5kJUa8gw\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login_user/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login_user",
+								""
+							]
+						},
+						"description": "This Api is used for login purpose"
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Gururaj K T\", \"email\": \"gururajthiyagarajan@gmail.com\", \"isAdmin\": \"false\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/register/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"register",
+								""
+							]
+						},
+						"description": "This Api is used for registering the users"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Borrower Management",
+			"item": [
+				{
+					"name": "view_borrower",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "delete_record",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"description": "In this folder there will be Api's for managing borrowers"
+		}
+	]
+}
