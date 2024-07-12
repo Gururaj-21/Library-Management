@@ -7,5 +7,8 @@ urlpatterns = [
     path('book_management/',book_management,name='book_management'),
     path('borrowing_history/',borrowing_history,name="borrowing_management"),
     path('list_status_books/',list_status_books,name="list_status_books"),
+    path('borrower_view/',view_borrower),
+    path('delete_borrower/<int:borrower_id>/',delete_borrower),
+    path('view_user/',get_user),
     path('logout/',logout_user,name='logout')
 ]

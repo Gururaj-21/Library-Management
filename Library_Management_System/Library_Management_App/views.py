@@ -8,6 +8,8 @@ from .serializers import *
 from .models import Borrower, User, Book, BorrowingHistory
 from .password_generator import *
 from .mail import *
+
+
 # import logging
 
 # logger = logging.getLogger(__name__)
@@ -17,7 +19,9 @@ def login_required(function):
         if 'user_id' not in request.session:
             return JsonResponse({'message': 'Unauthorized access'}, status=status.HTTP_403_FORBIDDEN)
         return function(request, *args, **kwargs)
+
     return wrapper
+
 
 def admin_only(view_func):
     def wrapper(request, *args, **kwargs):
@@ -31,8 +35,8 @@ def admin_only(view_func):
 
 @csrf_exempt
 @api_view(['POST'])
-@admin_only
-@login_required
+# @admin_only
+# @login_required
 def register_borrower(request):
     try:
         # logger.info("Registering the user")
@@ -45,8 +49,8 @@ def register_borrower(request):
             else:
                 is_admin = False
             password_string = generate_random_string()
-            # hash_password = encode_string(password_string)
-            user_details = User.objects.create(email_id=email_id, password=password_string, is_admin=is_admin)
+            hash_password = encode_string(password_string)
+            user_details = User.objects.create(email_id=email_id, password=hash_password, is_admin=is_admin)
             if not is_admin:
                 Borrower.objects.create(borrower_id=user_details, name=name, email_id=email_id)
             send_email(password_string, email_id)
@@ -56,15 +60,16 @@ def register_borrower(request):
         # logger.error(f"Error in register_borrower: {e}")
         return JsonResponse({'message': 'User registration failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 @api_view(['POST'])
 def login_user(request):
     try:
         if request.method == 'POST':
             mail_id = request.data.get('mail_id')
             password = request.data.get('password')
-
+            hash_password = encode_string(password)
             # Authenticate user
-            user = User.objects.get(email_id=mail_id, password=password)
+            user = User.objects.get(email_id=mail_id, password=hash_password)
 
             if user is not None:
                 # Set session variables
@@ -74,7 +79,8 @@ def login_user(request):
                 return JsonResponse({'message': 'Login successful'})
             else:
                 # Login failed
-                return JsonResponse({'message': 'Login failed. Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({'message': 'Login failed. Invalid credentials'},
+                                    status=status.HTTP_400_BAD_REQUEST)
 
         return JsonResponse({'message': 'Invalid request'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
@@ -110,7 +116,7 @@ def book_management(request):
                                     status=status.HTTP_200_OK)
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         elif request.method == 'DELETE':
-            book = Book.objects.get(id = request.data.get('id'))
+            book = Book.objects.get(id=request.data.get('id'))
             book.delete()
             books = Book.objects.all()
             all_books_serializer = BookSerializer(books, many=True)
@@ -123,18 +129,20 @@ def book_management(request):
     except Exception as e:
         return JsonResponse({'message': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 @csrf_exempt
 @login_required
 @api_view(['GET'])
 def list_status_books(request):
     try:
         if request.method == 'GET':
-            books = Book.objects.filter(status = request.data.get('status'))
+            books = Book.objects.filter(status=request.data.get('status'))
             serializer = BookSerializer(books, many=True)
             return JsonResponse({"data": serializer.data}, status=status.HTTP_200_OK, safe=False)
     except Exception as e:
         # logger.error(f"Error in list_status_books: {e}")
         return JsonResponse({'message': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @csrf_exempt
 @login_required
@@ -148,9 +156,11 @@ def list_books(request):
     except Exception as e:
         # logger.error(f"Error in list_books: {e}")
         return JsonResponse({'message': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 @csrf_exempt
 @login_required
-@api_view(['POST', 'GET', 'PUT','DELETE'])
+@api_view(['POST', 'GET', 'PUT', 'DELETE'])
 def borrowing_history(request):
     try:
         if request.method == 'POST':
@@ -238,6 +248,49 @@ def borrowing_history(request):
         # logger.error(f"Error in Borrowing history: {e}")
         return JsonResponse({'message': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+@csrf_exempt
+@login_required
+@admin_only
+@api_view(['GET'])
+def view_borrower(request):
+    try:
+        if request.method == 'GET':
+            borrowers = Borrower.objects.all()
+            serializer = BorrowerSerializer(borrowers, many=True)
+            return JsonResponse({"data": serializer.data}, status=status.HTTP_200_OK, safe=False)
+    except Exception as e:
+        # logger.error(f"Error in list_books: {e}")
+        return JsonResponse({'message': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+@csrf_exempt
+@login_required
+@admin_only
+@api_view(['DELETE'])
+def delete_borrower(request,borrower_id):
+    try:
+        borrower = Borrower.objects.get(borrower_id=borrower_id)
+        user = User.objects.get(id = borrower_id)
+        borrow_history = BorrowingHistory.objects.filter(returned_date__isnull=True).exists()
+        if not borrow_history:
+            borrower.delete()
+            user.delete()
+            return JsonResponse({"message": "Borrower deleted successfully!"},
+                                status=status.HTTP_200_OK)
+        else:
+            return JsonResponse({"message": "Return all the books before deleting"},
+                                status=status.HTTP_200_OK)
+    except Exception as e:
+        return JsonResponse({'message': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@csrf_exempt
+@api_view(['GET'])
+def get_user(request):
+    user = User.objects.all()
+    serializer = UserSerializer(user, many=True)
+    return JsonResponse({"data": serializer.data}, status=status.HTTP_200_OK, safe=False)
 
 @csrf_exempt
 @api_view(['POST'])

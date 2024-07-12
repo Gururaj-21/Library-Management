@@ -9,7 +9,7 @@ def send_email(password,recipient_mail):
                  Thank You,
                '''
     email_from = settings.EMAIL_HOST_USER
-    recipient_list = [].append(recipient_mail)
+    recipient_list = [recipient_mail]
 
     send_mail(subject, message, email_from, recipient_list)
 
