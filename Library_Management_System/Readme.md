@@ -62,6 +62,6 @@ To easily test the API endpoints, you can use Postman collections. Follow these 
     - Click `Send` to execute the request.
 
 ## Admin credentials:
-Uses this credential to login as Ads=min
+Uses this credential to login as Admin
 - mail_id:gururaj431@gmail.com
 - password:bUlqUe2FtG
