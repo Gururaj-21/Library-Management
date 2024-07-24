@@ -6,7 +6,7 @@ This project is a Django-based library management system that allows users to ma
  - Manage books and borrowers.
  - Track borrowing history.
  - Api endpoints to do crud operations for borrower, books,borrowing history.
- - Integrated mail to send the password mail to the borrowers.
+ - Integrated SMTP to send the password mail to the borrowers.
  - Implemented login_required and admin_only access for the api's.
 
 ## Requirement
@@ -62,6 +62,6 @@ To easily test the API endpoints, you can use Postman collections. Follow these 
     - Click `Send` to execute the request.
 
 ## Admin credentials:
-Uses this credential to login as Ads=min
+Uses this credential to login as Admin
 - mail_id:gururaj431@gmail.com
 - password:bUlqUe2FtG
