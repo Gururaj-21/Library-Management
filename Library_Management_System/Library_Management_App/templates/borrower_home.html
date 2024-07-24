@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borrower Home Page</title>
+    {% load static %}
+    <link href="{% static 'css/borrower_home.css' %}" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <h1>Library Management System</h1>
+        <button id="logoutButton">Logout</button>
+        <nav>
+            <ul>
+                <li><a href="#available-books">Available Books</a></li>
+                <li><a href="#borrowed-books">Borrowed Books</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="available-books">
+            <h2>Available Books</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Published Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="availableBooksTable"></tbody>
+            </table>
+        </section>
+        <section id="borrowed-books">
+            <h2>Borrowed Books</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Published Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="borrowedBooksTable"></tbody>
+            </table>
+        </section>
+    </main>
+    <script src="{% static 'js/borrower_home.js' %}"></script>
+</body>
+</html>

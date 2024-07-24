@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Book</title>
+</head>
+<body>
+    <h3>Edit Book</h3>
+    <form id="bookForm">
+        <input type="hidden" id="bookId" value="{{ book.id }}">
+        <input type="text" id="bookTitle" placeholder="Title" value="{{ book.title }}" required>
+        <input type="text" id="bookAuthor" placeholder="Author" value="{{ book.author }}" required>
+        <input type="text" id="isbn" placeholder="Isbn" value="{{ book.isbn }}" required>
+        <input type="text" id="published_date" placeholder="Published Date" value="{{ book.published_date }}" required>
+        <button type="submit">Update Book</button>
+        <button type="button" onclick="cancelForm()">Cancel</button>
+    </form>
+
+    <script>
+        document.getElementById('bookForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const id = document.getElementById('bookId').value;
+            const title = document.getElementById('bookTitle').value;
+            const author = document.getElementById('bookAuthor').value;
+            const isbn = document.getElementById('isbn').value;
+            const published_date = document.getElementById('published_date').value;
+
+            await fetch(`/api/books/${id}/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title, author, isbn, published_date }),
+            });
+            window.location.href = '/book-management/'; // Redirect to a suitable page after updating
+        });
+
+        function cancelForm() {
+            window.location.href = '/book-management/'; // Redirect to a suitable page if the form is canceled
+        }
+    </script>
+</body>
+</html>

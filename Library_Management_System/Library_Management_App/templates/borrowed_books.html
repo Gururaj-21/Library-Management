@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borrowed Books</title>
+    {% load static %}
+    <link href="{% static 'css/admin_home.css' %}" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <h1>Library Management System</h1>
+        <button id="logoutButton">Logout</button>
+    </header>
+    <nav>
+        <a href="{% url 'available_books_page' %}">Available Books</a>
+        <a href="{% url 'borrowed_books_page' %}">Borrowed Books</a>
+
+    </nav>
+    <main>
+        <section id="borrowed-books">
+            <h2>Borrowed Books</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Published Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="borrowedBooksTable"></tbody>
+            </table>
+        </section>
+    </main>
+    <script src="{% static 'js/borrower_home.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutButton = document.getElementById('logoutButton');
+
+            logoutButton.addEventListener('click', async function() {
+                const csrfToken = getCookie('csrftoken');
+                console.log('CSRF Token:', csrfToken); // Debugging line
+                const response = await fetch('/logout/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    window.location.href = data.redirect_url;
+                } else {
+                    console.error('Logout failed:', response.statusText); // Debugging line
+                }
+            });
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Load available books and other scripts can be called here
+            loadAvailableBooks();
+        });
+    </script>
+</body>
+</html>

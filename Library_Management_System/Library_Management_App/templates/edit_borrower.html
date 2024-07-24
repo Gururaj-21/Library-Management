@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Borrower</title>
+</head>
+<body>
+    <h3>Edit Borrower</h3>
+    <form id="borrowerForm">
+        <input type="hidden" id="borrowerId" value="{{ borrower.borrower_id.id }}">
+        <input type="text" id="borrowerName" placeholder="Name" value="{{ borrower.name }}" required>
+        <input type="email" id="borrowerEmail" placeholder="Email" value="{{ borrower.email_id }}" required>
+        <button type="submit">Update Borrower</button>
+        <button type="button" onclick="cancelForm()">Cancel</button>
+    </form>
+
+    <script>
+        document.getElementById('borrowerForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const id = document.getElementById('borrowerId').value;
+            const name = document.getElementById('borrowerName').value;
+            const email = document.getElementById('borrowerEmail').value;
+            await fetch(`/api/borrowers/${id}/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email }),
+            });
+            window.location.href = '/borrower-management/'; // Replace with actual URL of borrower management page
+        });
+
+        function cancelForm() {
+            window.location.href = '/borrower-management/'; // Replace with actual URL of borrower management page
+        }
+    </script>
+</body>
+</html>

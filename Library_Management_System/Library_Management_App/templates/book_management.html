@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    {% load static %}
+    <link href="{% static 'css/admin_home.css' %}" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <h1>Library Management System</h1>
+        <button id="logoutButton">Logout</button>
+    </header>
+
+    <nav>
+        <a href="{% url 'borrower_management_page' %}">Borrower Management</a>
+        <a href="{% url 'book_management_page' %}">Book Management</a>
+    </nav>
+
+    <main>
+        <!-- Book Management -->
+        <section id="bookManagement">
+            <h2>Manage Books</h2>
+            <input type="text" id="bookSearch" placeholder="Search books">
+            <button id="addBookButton">Add Book</button>
+            <div id="bookFormContainer" class="form-container"></div>
+            <table id="booksTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>ISBN</th>
+                        <th>Published Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Books will be dynamically added here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="{% static 'js/book_management.js' %}"></script>
+</body>
+</html>

@@ -28,10 +28,10 @@ class RegisterBorrowerTest(TestCase):
 
 
 class BookManagementTest(TestCase):
-    def setUp(self):
-        self.client = Client()
-        self.user = User.objects.create_user(username="test_user", password="test_password")
-        self.client.login(username="test_user", password="test_password")  # Simulate login
+    # def setUp(self):
+    #     self.client = Client()
+    #     self.user = User.objects.create_user(username="test_user", password="test_password")
+    #     self.client.login(username="test_user", password="test_password")  # Simulate login
 
     def test_create_book_success(self):
         data = {
