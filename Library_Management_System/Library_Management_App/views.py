@@ -249,9 +249,10 @@ def manage_books(request):
 def get_borrower_name(request, id):
     borrower_name = ""
     borrowed_date = ""
-    borrowing_history = BorrowingHistory.objects.filter(book_id=id, returned_date__isnull=True)
+    books = Book.objects.get(id = id)
+    borrowing_history = BorrowingHistory.objects.filter(book=books, returned_date__isnull=True)
     if borrowing_history:
-        borrower = Borrower.objects.filter(borrower_id=borrowing_history.values()[0]['borrower_id']).first()
+        borrower = Borrower.objects.filter(id=borrowing_history.values()[0]['borrower_id']).first()
         if borrower:
             borrower_name = borrower.name
             borrowed_date = borrowing_history.values()[0]['borrowed_date']
