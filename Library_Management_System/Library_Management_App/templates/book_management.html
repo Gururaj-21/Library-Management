@@ -14,15 +14,14 @@
     </header>
 
     <nav>
-        <a href="{% url 'borrower_management_page' %}">Borrower Management</a>
         <a href="{% url 'book_management_page' %}">Book Management</a>
+        <a href="{% url 'borrower_management_page' %}">Borrower Management</a>
     </nav>
 
     <main>
         <!-- Book Management -->
         <section id="bookManagement">
             <h2>Manage Books</h2>
-            <input type="text" id="bookSearch" placeholder="Search books">
             <button id="addBookButton">Add Book</button>
             <div id="bookFormContainer" class="form-container"></div>
             <table id="booksTable">
@@ -34,6 +33,8 @@
                         <th>ISBN</th>
                         <th>Published Date</th>
                         <th>Status</th>
+                        <th>Borrower</th>
+                        <th>Borrowed Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -44,6 +45,6 @@
         </section>
     </main>
 
-    <script src="{% static 'js/book_management.js' %}"></script>
+    <script src="{% static 'js/books_management.js' %}"></script>
 </body>
 </html>

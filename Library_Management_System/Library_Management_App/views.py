@@ -13,10 +13,10 @@ from .models import Borrower, User, Book, BorrowingHistory
 from .password_generator import *
 from .mail import *
 
+import logging
 
-# import logging
+logger = logging.getLogger('django')
 
-# logger = logging.getLogger(__name__)
 
 def login_required(function):
     def wrapper(request, *args, **kwargs):
@@ -37,13 +37,15 @@ def admin_only(view_func):
     return wrapper
 
 
-
 def login_page(request):
+    logger.info("Rendering Logging Page")
     return render(request, 'login.html')
+
 
 @api_view(['POST'])
 def login_user(request):
     try:
+        logger.info("Logging in to Library management System")
         if request.method == 'POST':
             data = json.loads(request.body.decode('utf-8'))
             mail_id = data.get('email')
@@ -71,7 +73,7 @@ def login_user(request):
 
         return JsonResponse({'message': 'Invalid request'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
-        # logger.error(f"Error in login_user: {e}")
+        logger.error(f"Error in login_user: {e}")
         return JsonResponse({'message': 'An error occurred during login'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -81,10 +83,12 @@ def login_user(request):
 def Admin_home_page(request):
     return render(request, 'book_management.html')
 
+
 @login_required
 @admin_only
 def borrower_management_page(request):
     return render(request, 'borrower_management.html')
+
 
 @login_required
 @csrf_exempt
@@ -92,25 +96,30 @@ def borrower_management_page(request):
 def book_management_page(request):
     return render(request, 'book_management.html')
 
+
 @csrf_exempt
 @login_required
 def Borrower_home_page(request):
     return render(request, 'available_books.html')
 
+
 @login_required
 def available_books_page(request):
     return render(request, 'available_books.html')
 
+
 @login_required
 def borrowed_books_page(request):
     return render(request, 'borrowed_books.html')
+
+
 @csrf_exempt
 @api_view(['POST'])
 @admin_only
 @login_required
 def register_borrower(request):
     try:
-        # logger.info("Registering the user")
+        logger.info("Registering the user")
         if request.method == 'POST':
             name = request.data.get('name')
             email_id = request.data.get('email')
@@ -124,7 +133,7 @@ def register_borrower(request):
             print(request.data)
             return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
     except Exception as e:
-        # logger.error(f"Error in register_borrower: {e}")
+        logger.error(f"Error in register_borrower: {e}")
         return JsonResponse({'message': 'User registration failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -134,19 +143,20 @@ def register_borrower(request):
 @api_view(['GET'])
 def view_borrower(request):
     try:
+        logger.info("List Book View")
         if request.method == 'GET':
             borrowers = Borrower.objects.all()
             serializer = BorrowerSerializer(borrowers, many=True)
             return JsonResponse({"data": serializer.data}, status=status.HTTP_200_OK, safe=False)
     except Exception as e:
-        # logger.error(f"Error in list_books: {e}")
+        logger.error(f"Error in list_books: {e}")
         return JsonResponse({'message': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @csrf_exempt
 @login_required
 @admin_only
-@api_view(['PUT','DELETE'])
+@api_view(['PUT', 'DELETE'])
 def delete_borrower(request, borrower_id):
     try:
         borrower = Borrower.objects.get(borrower_id=borrower_id)
@@ -159,7 +169,8 @@ def delete_borrower(request, borrower_id):
 
         if request.method == 'DELETE':
             user = User.objects.get(id=borrower_id)
-            borrow_history = BorrowingHistory.objects.filter(borrower_id=borrower_id,returned_date__isnull=True).exists()
+            borrow_history = BorrowingHistory.objects.filter(borrower_id=borrower_id,
+                                                             returned_date__isnull=True).exists()
             if not borrow_history:
                 borrower.delete()
                 user.delete()
@@ -205,7 +216,12 @@ def modify_borrower(request, id):
         return JsonResponse({'message': 'Borrower updated successfully'})
 
     if request.method == 'DELETE':
-        borrower.delete()
+        user = User.objects.get(id=id)
+        borrow_history = BorrowingHistory.objects.filter(borrower_id=borrower.id,
+                                                         returned_date__isnull=True).exists()
+        if not borrow_history:
+            borrower.delete()
+            user.delete()
         return JsonResponse({'message': 'Borrower deleted successfully'})
 
 
@@ -229,6 +245,21 @@ def manage_books(request):
 @csrf_exempt
 @admin_only
 @login_required
+@api_view(['GET'])
+def get_borrower_name(request, id):
+    borrower_name = ""
+    borrowed_date = ""
+    borrowing_history = BorrowingHistory.objects.filter(book_id=id, returned_date__isnull=True)
+    if borrowing_history:
+        borrower = Borrower.objects.filter(borrower_id=borrowing_history.values()[0]['borrower_id']).first()
+        if borrower:
+            borrower_name = borrower.name
+            borrowed_date = borrowing_history.values()[0]['borrowed_date']
+    return JsonResponse({"name": borrower_name,"borrowed_date":borrowed_date}, safe=False)
+
+@csrf_exempt
+@admin_only
+@login_required
 @api_view(['PUT', 'DELETE'])
 def modify_book(request, id):
     try:
@@ -239,7 +270,9 @@ def modify_book(request, id):
     if request.method == 'PUT':
         data = JSONParser().parse(request)
         # book = Book.objects.get(id=data["id"])
-        date_obj = datetime.strptime(data['published_date'], '%B %d, %Y')
+        date_str = data['published_date']
+        date_str = date_str.replace('Sept.', 'Sep')
+        date_obj = datetime.strptime(date_str, '%b %d, %Y')
         # Format the datetime object into the desired string format
         formatted_date = date_obj.strftime('%Y-%m-%d')
         data['published_date'] = formatted_date
@@ -253,18 +286,22 @@ def modify_book(request, id):
         book.delete()
         return JsonResponse({'message': 'Book deleted successfully'})
 
+
 @csrf_exempt
 @login_required
 @admin_only
 def edit_book(request, id):
     book = get_object_or_404(Book, id=id)
     return render(request, 'edit_book.html', {'book': book})
+
+
 @csrf_exempt
 @login_required
 @admin_only
 def edit_borrower(request, id):
     borrower = get_object_or_404(Borrower, borrower_id=id)
     return render(request, 'edit_borrower.html', {'borrower': borrower})
+
 
 @csrf_exempt
 @api_view(['POST', 'GET', 'PUT', 'DELETE'])
@@ -313,12 +350,13 @@ def book_management(request):
 @api_view(['GET'])
 def list_status_books(request):
     try:
+        logger.info("Borrower View books")
         if request.method == 'GET':
             books = Book.objects.filter(status="available")
             data = list(books.values('id', 'title', 'author', 'published_date'))
             return JsonResponse(data, safe=False)
     except Exception as e:
-        # logger.error(f"Error in list_status_books: {e}")
+        logger.error(f"Error in list_status_books: {e}")
         return JsonResponse({'message': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -414,10 +452,8 @@ def borrowing_history(request):
 
 
     except Exception as e:
-        # logger.error(f"Error in Borrowing history: {e}")
+        logger.error(f"Error in Borrowing history: {e}")
         return JsonResponse({'message': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
 
 @csrf_exempt
@@ -438,8 +474,10 @@ def logout_user(request):
         # if request.method == 'POST':
         return JsonResponse({'redirect_url': '/login/'}, status=status.HTTP_200_OK)
     except Exception as e:
-        # logger.error(f"Error in logout_user: {e}")
+        logger.error(f"Error in logout_user: {e}")
         return JsonResponse({'message': 'An error occurred during logout'},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+# User.objects.filter(is_admin=False).delete()
 
+# def delete

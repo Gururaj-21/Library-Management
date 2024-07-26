@@ -14,14 +14,15 @@
     </header>
 
     <nav>
-        <a href="{% url 'book_management_page' %}">Book Management</a>
-        <a href="{% url 'borrower_management_page' %}">Borrower Management</a>
+        <a href="#borrowerManagement">Borrower Management</a>
+        <a href="#bookManagement">Book Management</a>
     </nav>
 
     <main>
         <!-- Borrower Management -->
         <section id="borrowerManagement">
             <h2>Manage Borrowers</h2>
+            <input type="text" id="borrowerSearch" placeholder="Search borrowers">
             <button id="addBorrowerButton">Add Borrower</button>
             <div id="borrowerFormContainer" class="form-container"></div>
             <table id="borrowersTable">
@@ -38,8 +39,32 @@
                 </tbody>
             </table>
         </section>
+
+        <!-- Book Management -->
+        <section id="bookManagement">
+            <h2>Manage Books</h2>
+            <input type="text" id="bookSearch" placeholder="Search books">
+            <button id="addBookButton">Add Book</button>
+            <div id="bookFormContainer" class="form-container"></div>
+            <table id="booksTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>ISBN</th>
+                        <th>Published Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Books will be dynamically added here -->
+                </tbody>
+            </table>
+        </section>
     </main>
 
-    <script src="{% static 'js/borrower_management.js' %}"></script>
+    <script src="{% static 'js/admin_home.js' %}"></script>
 </body>
 </html>
